@@ -1,7 +1,9 @@
 import requests
+import allure
+from data.urls import BASE_URL
 
-BASE_URL = "https://stellarburgers.nomoreparties.site/api"
 
+@allure.step("Создание тестового пользователя с email: {email}")
 def create_test_user(email, password):
     response = requests.post(
         f"{BASE_URL}/auth/register",
@@ -11,12 +13,17 @@ def create_test_user(email, password):
         raise Exception(f"Не удалось создать пользователя: {response.json()}")
     return response.json()
 
+
+@allure.step("Удаление тестового пользователя с токеном доступа")
 def delete_test_user(access_token):
+    """Удаляет тестового пользователя через API"""
     headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.delete(f"{BASE_URL}/auth/user", headers=headers)
     if response.status_code != 200:
         raise Exception(f"Не удалось удалить пользователя: {response.json()}")
 
+
+@allure.step("Авторизация тестового пользователя с email: {email}")
 def login_test_user(email, password):
     response = requests.post(
         f"{BASE_URL}/auth/login",
@@ -26,10 +33,12 @@ def login_test_user(email, password):
         raise Exception(f"Не удалось авторизоваться: {response.json()}")
     return response.json()["accessToken"]
 
+
 class ApiHelpers:
     BASE_URL = "https://stellarburgers.nomoreparties.site/api"
 
     @staticmethod
+    @allure.step("Создание заказа с ингредиентами: {ingredients}")
     def create_order(token, ingredients):
         headers = {
             "Authorization": token,

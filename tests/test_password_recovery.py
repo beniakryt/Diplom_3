@@ -1,62 +1,51 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import allure
 from pages.login_page import LoginPage
 
 
 @allure.feature("Восстановление пароля")
-def test_go_to_password_recovery(browser):
-    browser.get("https://stellarburgers.nomoreparties.site/login")
-    login_page = LoginPage(browser)
+@allure.story("Функционал восстановления пароля")
+class TestPasswordRecovery:
+    @allure.title("Тест перехода на страницу восстановления пароля")
+    def test_go_to_password_recovery(self, browser):
+        login_page = LoginPage(browser)
 
-    with allure.step("Переход на страницу восстановления пароля"):
-        login_page.go_to_password_recovery()
+        with allure.step("Открытие страницы логина"):
+            login_page.open_login_page()
 
-        WebDriverWait(browser, 10).until(
-            EC.url_contains("forgot-password")
-        )
-        assert "forgot-password" in browser.current_url
+        with allure.step("Переход на страницу восстановления пароля"):
+            login_page.go_to_password_recovery()
 
+        with allure.step("Проверка URL страницы восстановления пароля"):
+            login_page.wait_for_url_contains("forgot-password")
+            assert "forgot-password" in login_page.get_current_url()
 
+    @allure.title("Тест отправки формы восстановления пароля")
+    def test_password_recovery_submit(self, browser):
+        login_page = LoginPage(browser)
 
-@allure.feature("Восстановление пароля")
-def test_password_recovery_submit(browser):
-    browser.get("https://stellarburgers.nomoreparties.site/login")
-    login_page = LoginPage(browser)
+        with allure.step("Открытие страницы логина"):
+            login_page.open_login_page()
 
-    with allure.step("Ввод email и клик по кнопке восстановления"):
-        login_page.go_to_password_recovery()
-        login_page.input_email("yurii142323223@yandex.ru")
-        login_page.click_recover()
+        with allure.step("Ввод email и отправка формы восстановления"):
+            login_page.go_to_password_recovery()
+            login_page.input_email("yurii142323223@yandex.ru")
+            login_page.click_recover()
 
-        expected_url = "https://stellarburgers.nomoreparties.site/reset-password"
+        with allure.step("Ожидание перехода на страницу сброса пароля"):
+            login_page.wait_for_url_contains("reset-password")
+            assert "reset-password" in login_page.get_current_url()
 
-        # Ожидание перехода на URL восстановления
-        WebDriverWait(browser, 10).until(
-            EC.url_to_be(expected_url)
-        )
-        assert browser.current_url == expected_url
+    @allure.title("Тест переключения видимости пароля")
+    def test_toggle_password_visibility(self, browser):
+        login_page = LoginPage(browser)
 
+        with allure.step("Открытие страницы восстановления пароля"):
+            login_page.open_forgot_password_page()
 
-@allure.feature("Восстановление пароля")
-def test_toggle_password_visibility(browser):
-    login_page = LoginPage(browser)
-    browser.get("https://stellarburgers.nomoreparties.site/forgot-password")
+        with allure.step("Клик по кнопке 'Восстановить пароль'"):
+            login_page.click_recover()
+            login_page.wait_for_url_contains("reset-password")
 
-    with allure.step("Клик по кнопке 'Восстановить пароль'"):
-        login_page.click_recover()
-
-        # Ожидание, что URL изменится на reset-password
-        WebDriverWait(browser, 10).until(
-            EC.url_contains("reset-password")
-        )
-
-    with allure.step("Клик по кнопке 'Показать/Скрыть пароль'"):
-        login_page.toggle_password_visibility()
-
-        # Ожидание, что поле станет активным
-        WebDriverWait(browser, 10).until(
-            lambda driver: login_page.is_field_active()
-        )
-
-        assert login_page.is_field_active()
+        with allure.step("Переключение видимости пароля"):
+            login_page.toggle_password_visibility()
+            assert login_page.is_field_active()

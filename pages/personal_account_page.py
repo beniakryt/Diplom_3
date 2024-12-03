@@ -1,22 +1,28 @@
 from locators.personal_account_locators import PersonalAccountLocators
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from pages.base_page import BasePage
+import allure
 
-
-class PersonalAccountPage:
-    def __init__(self, driver):
-        self.driver = driver
-
+class PersonalAccountPage(BasePage):
+    @allure.step("Переход в личный кабинет")
     def go_to_personal_account(self):
-        self.driver.find_element(*PersonalAccountLocators.PERSONAL_ACCOUNT_BUTTON).click()
+        self.click_element(PersonalAccountLocators.PERSONAL_ACCOUNT_BUTTON)
 
+    @allure.step("Переход в раздел истории заказов")
     def go_to_order_history(self):
-        # Клик по кнопке "История заказов"
-        WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(PersonalAccountLocators.ORDER_HISTORY_SECTION)
-        ).click()
+        self.click_element(PersonalAccountLocators.ORDER_HISTORY_SECTION)
 
+    @allure.step("Выход из аккаунта")
     def logout(self):
-        """Выход из аккаунта"""
-        self.driver.find_element(*PersonalAccountLocators.LOGOUT_BUTTON).click()
+        self.click_element(PersonalAccountLocators.LOGOUT_BUTTON)
 
+    @allure.step("Переход в личный кабинет")
+    def go_to_personal_account(self):
+        self.click_element(PersonalAccountLocators.PERSONAL_ACCOUNT_BUTTON)
+
+    @allure.step("Переход в раздел истории заказов")
+    def go_to_order_history(self):
+        self.click_element(PersonalAccountLocators.ORDER_HISTORY_SECTION)
+
+    @allure.step("Выход из аккаунта")
+    def logout(self):
+        self.click_element(PersonalAccountLocators.LOGOUT_BUTTON)

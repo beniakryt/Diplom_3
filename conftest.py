@@ -1,45 +1,18 @@
 import pytest
 import requests
 from selenium import webdriver
-import time
-import random
-import string
+from data.urls import BASE_URL
+from utils.helpers import generate_random_email, generate_random_name
 
-BASE_URL = "https://stellarburgers.nomoreparties.site/api"
 
-def debug_pause(seconds=1):
-    time.sleep(seconds)
-
-class FirefoxDriverWithPause(webdriver.Firefox):
-    def find_element(self, *args, **kwargs):
-        element = super().find_element(*args, **kwargs)
-        debug_pause(1)
-        return element
-
-    def click(self, *args, **kwargs):
-        super().click(*args, **kwargs)
-        debug_pause(1)
-
-    def send_keys(self, *args, **kwargs):
-        super().send_keys(*args, **kwargs)
-        debug_pause(1)
-
-def generate_random_email():
-    domain = "example.com"
-    prefix = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
-    return f"{prefix}@{domain}"
-
-def generate_random_name():
-    return "User_" + "".join(random.choices(string.ascii_letters, k=5))
-
-@pytest.fixture(scope="function", params=["chrome", "firefox"])
+@pytest.fixture(scope="function", params=["firefox", "chrome"])
 def browser(request):
     if request.param == "chrome":
         driver = webdriver.Chrome()
     elif request.param == "firefox":
-        driver = FirefoxDriverWithPause()
-        driver.is_firefox = True
-        driver.implicitly_wait(10)
+        driver = webdriver.Firefox()
+    else:
+        raise ValueError(f"Unsupported browser: {request.param}")
 
     yield driver
     driver.quit()
