@@ -5,7 +5,7 @@ from data.urls import BASE_URL
 from utils.helpers import generate_random_email, generate_random_name
 
 
-@pytest.fixture(scope="function", params=["firefox", "chrome"])
+@pytest.fixture(scope="function", params=["chrome", "firefox"])
 def browser(request):
     if request.param == "chrome":
         driver = webdriver.Chrome()

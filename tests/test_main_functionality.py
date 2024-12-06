@@ -30,7 +30,7 @@ class TestNavigation:
 
         with allure.step("Проверка URL"):
             main_page.wait_for_url_contains("feed")
-
+            assert "feed" in main_page.get_current_url(), "URL не содержит ожидаемую часть 'feed'"
 
 @allure.feature("Основной функционал")
 @allure.story("Работа с ингредиентами")
@@ -60,6 +60,7 @@ class TestIngredients:
 
         with allure.step("Закрытие всплывающего окна"):
             main_page.close_popup()
+            assert not main_page.is_popup_visible()
 
     @allure.title("Тест увеличения счётчика ингредиентов")
     def test_ingredient_counter_increase(self, browser):

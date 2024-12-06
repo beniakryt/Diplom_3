@@ -9,5 +9,5 @@ class MainPageLocators:
     INGREDIENT_COUNTER = (By.XPATH, "(//div[@class='counter_counter__ZNLkj counter_default__28sqi']//p[@class='counter_counter__num__3nue1'])[2]")
     SUBMIT_ORDER_BUTTON = (By.XPATH, "//button[contains(@class, 'button_button__33qZ0') and contains(@class, 'button_button_type_primary__1O7Bx') and contains(text(), 'Оформить заказ')]")
     ORDER_SUCCESS_MESSAGE = (By.XPATH, "//div[contains(@class, 'Modal_modal__contentBox__sCy8X') and contains(., 'идентификатор заказа')]")
-    INGREDIENT_DETAILS_POPUP = (By.XPATH, "//div[contains(@class, 'Modal_modal__contentBox__sCy8X pt-10 pb-15')]")
+    INGREDIENT_DETAILS_POPUP = (By.XPATH, "(//div[contains(@class, 'Modal_modal__container')])[1]")
     ORDER_AREA = (By.XPATH, "//span[@class='constructor-element__text' and contains(text(), 'Перетяните булочку сюда (верх)')]")
